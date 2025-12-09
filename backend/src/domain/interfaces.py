@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import List, Any
-from .entities import Document, Chunk, ChatMessage
+from src.domain.entities import Document, Chunk, ChatMessage
 
 
 class VectorStoreRepository(ABC):
