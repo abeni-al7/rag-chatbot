@@ -12,8 +12,8 @@ class VectorStoreRepository(ABC):
         pass
 
     @abstractmethod
-    async def search(self, query: str, limit: int = 5) -> List[Chunk]:
-        """Searches for relevant chunks based on a query."""
+    async def search(self, query_vector: List[float], limit: int = 5) -> List[Chunk]:
+        """Searches for relevant chunks based on a query vector."""
         pass
 
 
