@@ -1,0 +1,39 @@
+from abc import ABC, abstractmethod
+from typing import List, Any
+from .entities import Document, Chunk, ChatMessage
+
+
+class VectorStoreRepository(ABC):
+    """Interface for vector store operations."""
+
+    @abstractmethod
+    async def add_chunks(self, chunks: List[Chunk]) -> None:
+        """Adds chunks to the vector store."""
+        pass
+
+    @abstractmethod
+    async def search(self, query: str, limit: int = 5) -> List[Chunk]:
+        """Searches for relevant chunks based on a query."""
+        pass
+
+
+class LLMService(ABC):
+    """Interface for Large Language Model services."""
+
+    @abstractmethod
+    async def generate_response(
+        self, query: str, context: List[Chunk], history: List[ChatMessage]
+    ) -> str:
+        """
+        Generates a response from the LLM based on query, context, and history.
+        """
+        pass
+
+
+class DocumentParser(ABC):
+    """Interface for document parsing."""
+
+    @abstractmethod
+    async def parse(self, file_source: Any) -> List[Document]:
+        """Parses a file source into a list of Documents."""
+        pass
