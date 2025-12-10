@@ -37,3 +37,17 @@ class DocumentParser(ABC):
     async def parse(self, file_source: Any) -> List[Document]:
         """Parses a file source into a list of Documents."""
         pass
+
+
+class EmbeddingService(ABC):
+    """Interface for embedding generation."""
+
+    @abstractmethod
+    async def embed_text(self, text: str) -> List[float]:
+        """Generates an embedding for a single text string."""
+        pass
+
+    @abstractmethod
+    async def embed_documents(self, texts: List[str]) -> List[List[float]]:
+        """Generates embeddings for a list of text strings."""
+        pass

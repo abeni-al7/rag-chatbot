@@ -1,8 +1,8 @@
 import os
 from typing import List
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
-from src.domain.interfaces import LLMService
+from src.domain.interfaces import LLMService, EmbeddingService
 from src.domain.entities import Chunk, ChatMessage
 
 
@@ -68,3 +68,37 @@ class GeminiService(LLMService):
 
         response = await self.llm.ainvoke(messages)
         return str(response.content)
+
+
+class GeminiEmbeddingService(EmbeddingService):
+    """
+    Implementation of EmbeddingService using Google's Gemini embeddings.
+    """
+
+    def __init__(self, api_key: str = None, model: str = "models/embedding-001"):
+        """
+        Initialize the Gemini embedding service.
+
+        Args:
+            api_key: Google API key. If None, looks for GOOGLE_API_KEY env var.
+            model: The model name to use (default: models/embedding-001).
+        """
+        self.api_key = api_key or os.getenv("GOOGLE_API_KEY")
+        if not self.api_key:
+            raise ValueError(
+                "Google API key must be provided or set in "
+                "GOOGLE_API_KEY environment variable."
+            )
+
+        self.embeddings = GoogleGenerativeAIEmbeddings(
+            model=model,
+            google_api_key=self.api_key,
+        )
+
+    async def embed_text(self, text: str) -> List[float]:
+        """Generates an embedding for a single text string."""
+        return await self.embeddings.aembed_query(text)
+
+    async def embed_documents(self, texts: List[str]) -> List[List[float]]:
+        """Generates embeddings for a list of text strings."""
+        return await self.embeddings.aembed_documents(texts)
