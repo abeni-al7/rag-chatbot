@@ -1,5 +1,5 @@
 from typing import Any, List
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 from src.domain.entities import Chunk
 from src.domain.interfaces import (
     DocumentParser,
