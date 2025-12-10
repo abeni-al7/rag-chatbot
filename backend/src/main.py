@@ -9,16 +9,16 @@ from src.infrastructure.pdf_parser import PDFParser
 from src.infrastructure.weaviate_repo import WeaviateRepository
 from src.application.ingest_use_case import IngestDocumentUseCase
 from src.application.chat_use_case import ChatUseCase
+from src import dependencies
+from src.interfaces.api import router as api_router
 
 # Global variables for dependencies
 weaviate_client = None
-ingest_use_case = None
-chat_use_case = None
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    global weaviate_client, ingest_use_case, chat_use_case
+    global weaviate_client
 
     # Initialize Weaviate Client
     # Connect to local Weaviate instance
@@ -38,13 +38,13 @@ async def lifespan(app: FastAPI):
     await weaviate_repo._ensure_collection()
 
     # Initialize Use Cases
-    ingest_use_case = IngestDocumentUseCase(
+    dependencies.ingest_use_case = IngestDocumentUseCase(
         parser=pdf_parser,
         repo=weaviate_repo,
         embedding_service=embedding_service,
     )
 
-    chat_use_case = ChatUseCase(
+    dependencies.chat_use_case = ChatUseCase(
         repo=weaviate_repo,
         llm_service=gemini_service,
         embedding_service=embedding_service,
@@ -58,19 +58,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="RAG Chatbot API", lifespan=lifespan)
-
-
-# Dependency providers
-def get_ingest_use_case() -> IngestDocumentUseCase:
-    if not ingest_use_case:
-        raise RuntimeError("Ingest use case not initialized")
-    return ingest_use_case
-
-
-def get_chat_use_case() -> ChatUseCase:
-    if not chat_use_case:
-        raise RuntimeError("Chat use case not initialized")
-    return chat_use_case
+app.include_router(api_router)
 
 
 @app.get("/")
