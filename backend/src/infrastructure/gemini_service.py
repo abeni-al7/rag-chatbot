@@ -11,7 +11,7 @@ class GeminiService(LLMService):
     Implementation of LLMService using Google's Gemini model via LangChain.
     """
 
-    def __init__(self, api_key: str = None, model: str = "gemini-pro"):
+    def __init__(self, api_key: str = None, model: str = "gemini-2.5-flash-lite"):
         """
         Initialize the Gemini service.
 
@@ -75,7 +75,7 @@ class GeminiEmbeddingService(EmbeddingService):
     Implementation of EmbeddingService using Google's Gemini embeddings.
     """
 
-    def __init__(self, api_key: str = None, model: str = "models/embedding-001"):
+    def __init__(self, api_key: str = None, model: str = "gemini-embedding-001"):
         """
         Initialize the Gemini embedding service.
 

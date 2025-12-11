@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Message, Citation } from '../domain/types';
+import type { Message, Citation } from '../domain/types';
 
 const API_BASE_URL = 'http://localhost:8000/api';
 

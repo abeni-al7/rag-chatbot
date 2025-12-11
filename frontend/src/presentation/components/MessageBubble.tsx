@@ -1,5 +1,7 @@
 import React from 'react';
-import { Message } from '../../domain/types';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import type { Message } from '../../domain/types';
 import { FileText, User, Bot } from 'lucide-react';
 
 interface MessageBubbleProps {
@@ -26,9 +28,11 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
                             ? 'bg-blue-600 text-white rounded-tr-none' 
                             : 'bg-gray-100 text-gray-800 rounded-tl-none'
                     }`}>
-                        <p className="whitespace-pre-wrap text-sm leading-relaxed">
-                            {message.content}
-                        </p>
+                        <div className={`prose prose-sm max-w-none ${isUser ? 'prose-invert' : ''}`}>
+                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                {message.content}
+                            </ReactMarkdown>
+                        </div>
                     </div>
 
                     {/* Citations */}

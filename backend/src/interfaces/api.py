@@ -45,6 +45,7 @@ async def ingest_document(
         await use_case.execute(file_source=content, source_name=file.filename)
         return {"message": "Document ingested successfully", "filename": file.filename}
     except Exception as e:
+        print(f"Ingestion error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -62,9 +63,7 @@ async def chat(
             ChatMessage(role=m.role, content=m.content) for m in request.history
         ]
 
-        response = await use_case.execute(
-            query=request.query, history=history_entities
-        )
+        response = await use_case.execute(query=request.query, history=history_entities)
 
         # Convert domain response to Pydantic model
         return ChatResponseModel(
@@ -75,4 +74,5 @@ async def chat(
             ],
         )
     except Exception as e:
+        print(f"Chat error: {e}")
         raise HTTPException(status_code=500, detail=str(e))

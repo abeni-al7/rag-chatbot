@@ -38,9 +38,10 @@ export const FileUpload: React.FC = () => {
             if (fileInputRef.current) {
                 fileInputRef.current.value = '';
             }
-        } catch (error) {
+        } catch (error: any) {
             setStatus('error');
-            setErrorMessage('Failed to upload document. Please try again.');
+            const msg = error.response?.data?.detail || 'Failed to upload document. Please try again.';
+            setErrorMessage(msg);
             console.error('Upload error:', error);
         } finally {
             setIsUploading(false);
